@@ -1,0 +1,13 @@
+<div class="container">
+    <div class="input-group mb-3">
+        <input [(ngModel)]="url" type="text" class="form-control" placeholder="URL of recipe" aria-label="Recipe URL" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+          <button (click)="onClickMe()" class="btn btn-outline-secondary" type="button">Get Recipe</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10">
+          <p>{{clickMessage}}</p>
+        </div>
+      </div>
+</div>
