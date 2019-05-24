@@ -23,6 +23,14 @@
             "outFiles": [
                 "${workspaceFolder}/dist/out-tsc/**/*.js"
             ]
-        }
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Node: Nodemon",
+            "processId": "${command:PickProcess}",
+            "restart": true,
+            "protocol": "inspector",
+        },
     ]
 }

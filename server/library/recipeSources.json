@@ -1,0 +1,15 @@
+{
+    "recipeSites": [
+        {
+            "allrecipes": {
+                "url": {
+                    "hostName": "www.allrecipes.com",
+                    "format" : "https://{hostname}/recipe/{id}/{name}/print",
+                    "truncateCount" : 6,
+                    "printKeyword" : "print"
+                },
+                "recipeNodeIdentifier": ".recipe-print__container"
+            }
+        }
+    ]
+}
