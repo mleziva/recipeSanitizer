@@ -1,16 +1,14 @@
 var express = require('express');
 var router = express.Router();
 const request = require('request');
-const stripHtml = require("string-strip-html");
 const HTMLParser = require("node-html-parser");
 
 const hostName = '';
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.json('Express RESTful API');
+  res.json('Express RESTful API Time:' + new Date(Date.now()).toTimeString());
 });
 
-// https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY
 router.get('/recipe', function (req, res, next) {
   let recipeUrl = req.query.recipeUrl;
   determineSite(recipeUrl);
