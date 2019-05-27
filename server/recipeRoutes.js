@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var socketSingleton = require('./library/socketSingleton');
 
 const RecipeParser = require("./library/recipeParser");
 
@@ -10,6 +11,7 @@ router.get('/', function (req, res, next) {
 
 router.get('/recipe', function (req, res, next) {
     try{
+        socketSingleton.io.emit('newstest', {msg: 'success!'});
     RecipeParser.getRecipe(req.query.recipeUrl, function (err, data) {
         if (err) return res.json(err);
         res.json(data);

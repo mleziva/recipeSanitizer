@@ -17,7 +17,6 @@ export class RecipeComponent implements OnInit {
 
     this.http.get('http://localhost:3000/api/recipe/?recipeUrl=' + encodeURI(this.url))
     .subscribe(res => {
-      console.log(res);
       this.clickMessage = res.toString();
       }, (err) => {
         console.log(err);

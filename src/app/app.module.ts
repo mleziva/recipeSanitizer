@@ -6,10 +6,12 @@ import { RecipeComponent } from './recipe/recipe.component';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { RecentRecipesComponent } from './recent-recipes/recent-recipes.component';
 @NgModule({
   declarations: [
     AppComponent,
-    RecipeComponent
+    RecipeComponent,
+    RecentRecipesComponent
   ],
   imports: [
     BrowserModule,
