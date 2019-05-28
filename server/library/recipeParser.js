@@ -1,12 +1,12 @@
 const request = require('request');
 const HTMLParser = require("node-html-parser");
 
-var recipeParser = (function() {
+var recipeParser = (function () {
     'use strict';
- 
-     var hostName = '';
-     
-    function getRecipe(url, callback){
+
+    var hostName = '';
+
+    function getRecipe(url, callback) {
         hostName = new URL(url).hostname;
         var printUrl = _createPrintUrl(url);
         return _getPrintableText(printUrl, callback);
@@ -42,9 +42,59 @@ var recipeParser = (function() {
         }
         return i;
     };
+    async function executeAsyncTask() {
+        const valueA = await functionA()
+        const valueB = await functionB(valueA)
+        return function3(valueA, valueB)
+    }
+    async function getRecipe2(url, callback) {
+        //get page as string
+        //search with regex for link to print page
+        //strip out querystrings
+        //request that print page
+        //get title
+        //get title container and return just the contents of that
+        let fullSiteContents, printSiteContents, printUrl;
+        try {
+            fullSiteContents = await _doRequest(url)
+        } catch (err) {
+            logger.error('Http error', err)
+            return res.status(500).send()
+        };
+        printUrl = _findPrintUrl(fullSiteContents);
+        try {
+            fullSiteContents = await _doRequest(printUrl)
+        } catch (err) {
+            logger.error('Http error', err)
+            return res.status(500).send()
+        };
+        return fullSiteContents;
+    };
 
+    function _findPrintUrl(str) {
+        const regex = /(="(https?|www|\/\/www)(.+?)print(.+?)")/gm;
+        var dirtyUrl = regex.exec(str)[0];
+        //remove query strings
+        const queryStringRegex = /(="(.+?)(\?|"))/gm;
+        var cleanerUrl = queryStringRegex.exec(dirtyUrl)[0];
+        //trim beginning and ending characters
+        var cleanUrl = cleanerUrl.substr(2).slice(0, -1);
+        return cleanUrl;
+    };
+    function _doRequest(url) {
+        return new Promise(function (resolve, reject) {
+          request(url, function (error, res, body) {
+            if (!error && res.statusCode == 200) {
+              resolve(body);
+            } else {
+              reject(error);
+            }
+          });
+        });
+      }
     return {
         getRecipe: getRecipe,
+        getRecipe2: getRecipe2
     };
 }());
 

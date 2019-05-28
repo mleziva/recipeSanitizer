@@ -28,6 +28,16 @@ catch(err){
     res.json(err.toString());
 }
 });
+router.get('/recipe2', async (req, res, next) => {
+    try {
+        var searchedUrl = req.query.recipeUrl || "https://www.allrecipes.com/recipe/245559/fall-infused-mashed-potatoes/?internalSource=staff%20pick&referringId=1540&referringContentType=Recipe%20Hub";
+        const data = await RecipeParser.getRecipe2(searchedUrl);
+        res.json(data);
+      } catch (e) {
+        //this will eventually be handled by your error handling middleware
+        next(e) 
+      }
+});
 router.get('/recipe/recentSearches', function(req, res, next){
     res.json(recipeCache.recentSearches);
 });
