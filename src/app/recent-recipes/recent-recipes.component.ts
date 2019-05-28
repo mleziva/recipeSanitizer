@@ -13,7 +13,18 @@ export class RecentRecipesComponent implements OnInit {
   constructor(private recentRecipeService: RecentRecipesService) { }
 
   ngOnInit() {
-    this.recentRecipes = this.recentRecipeService.messages;
-  }
-
+    //get recent searches
+    this.recentRecipeService.recentSearches(this.setRecentRecipes);
+    this.recentRecipeService.initializeSocket(this.addRecentRecipe);
+    //set socketcallback to update recentrecipes
+  };
+  setRecentRecipes = (recentRecipesArray) => {
+    this.recentRecipes = recentRecipesArray;
+  };
+  addRecentRecipe  = (searchObject) => {
+    this.recentRecipes.unshift(searchObject)
+    if(this.recentRecipes.length >= 20){
+      this.recentRecipes.length = 20;
+    }
+  };
 }

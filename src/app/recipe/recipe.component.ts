@@ -16,11 +16,11 @@ export class RecipeComponent implements OnInit {
   onClickMe() {
 
     this.http.get('http://localhost:3000/api/recipe/?recipeUrl=' + encodeURI(this.url))
-    .subscribe(res => {
-      this.clickMessage = res.toString();
+      .subscribe(res => {
+        this.clickMessage = res.toString();
       }, (err) => {
         console.log(err);
       }
-    );
-    }
+      );
+  }
 }

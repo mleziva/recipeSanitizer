@@ -1,4 +1,4 @@
 <p>
   recent-recipes works!
-  <li *ngFor="let recipe of recentRecipes">{{recipe}}</li>
+  <li *ngFor="let recipe of recentRecipes"><a [attr.href]="recipe.url">{{recipe.name}}</a></li>
 </p>
