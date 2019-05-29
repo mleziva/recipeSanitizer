@@ -8,7 +8,8 @@
                     "truncateCount" : 6,
                     "printKeyword" : "print"
                 },
-                "recipeNodeIdentifier": ".recipe-print__container"
+                "recipeNodeIdentifier": ".recipe-print__container",
+                "recipeNameIdentifier": ".recipe-print__title"
             }
         }
     ]
