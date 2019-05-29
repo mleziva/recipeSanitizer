@@ -1,14 +1,29 @@
 const request = require('request');
 const HTMLParser = require('node-html-parser');
+const zlib = require('zlib');
+const recipeSites = require('./recipeSiteIndex').recipeSites; // delete require.cache[require.resolve('file.json')]
 
 const recipeParser = (function recipeParser() {
   let hostName; let fullSiteContents; let htmlRoot;
 
   function _doRequest(url) {
     return new Promise(((resolve, reject) => {
-      request(url, (error, res, body) => {
+      const customHeaderRequest = request.defaults({
+        headers: { 'User-Agent': 'Mozilla/4.0' },
+      });
+      customHeaderRequest.get(url, (error, res, body) => {
         if (!error && res.statusCode === 200) {
-          resolve(body);
+          // If response is gzip, unzip first
+          const encoding = res.headers['content-encoding'];
+          if (encoding && encoding.indexOf('gzip') >= 0) {
+            zlib.unzip(body, function(err, dezipped) {
+              let json_string = dezipped.toString('utf-8');
+              resolve(json_string);
+            });
+          } else {
+            // Response is not gzipped
+            resolve(body);
+          }
         } else {
           reject(error);
         }
@@ -24,16 +39,12 @@ const recipeParser = (function recipeParser() {
     }
     return i;
   }
-  function _createPrintUrl(url) {
-    let printUrl = '';
-    if (hostName.includes('allrecipes.com')) {
-      const lastSlash = _nthIndex(url, '/', 6);
-      const mainUrl = url.substr(0, lastSlash);
-      printUrl = `${mainUrl}/print`;
-    }
-    // allrecieps pattern: https://www.allrecipes.com/recipe/245559/fall-infused-mashed-potatoes/print/
-    // hostname/recipe/{id}/{name}/print
-    return printUrl;
+  function _addPrintUrl(siteObject) {
+    const returnSiteObject = siteObject;
+    const lastSlash = _nthIndex(siteObject.url, '/', siteObject.urlInfo.truncateCount);
+    const mainUrl = siteObject.url.substr(0, lastSlash);
+    returnSiteObject.printUrl = `${mainUrl}/${siteObject.urlInfo.printKeyword}`;
+    return returnSiteObject;
   }
   function _getRecipeName(selector) {
     const nameNode = htmlRoot.querySelector(selector);
@@ -50,76 +61,81 @@ const recipeParser = (function recipeParser() {
       pre: false,
     });
   }
-
-
-  async function tryGetIndexedRecipe(url) {
+  function _getSiteObjectFromIndex(url) {
     hostName = new URL(url).hostname;
-    // load hostname from indexfile
-    const printUrl = _createPrintUrl(url);
-    try {
-      fullSiteContents = await _doRequest(printUrl);
-    } catch (err) {
-      // return error here or something
+    let siteObject = null;
+    for (let i = 0; i < recipeSites.length; i++) {
+      if (recipeSites[i].hostName === hostName) {
+        siteObject = recipeSites[i];
+        siteObject.url = url;
+        break;
+      }
     }
-    _parseHtml(fullSiteContents);
-    const recipeContents = _getRecipeBody('.recipe-print__container');
-    const recipeName = _getRecipeName('.recipe-print__title');
-    return { url, recipeContents, recipeName };
+    return siteObject;
+  }
+  function _findPrintUrl(str) {
+    // ("([^"]+?)www\.ambitiouskitchen\.com([^"]+?)print(.*?)")
+    const hostnameRegex = hostName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const regex = new RegExp(`("([^"]+?)${hostnameRegex}([^"]+?)print(.*?)")`, 'gm');
+    const dirtyUrl = regex.exec(str)[0];
+    // remove query strings
+    const queryStringRegex = /("(.+?)(\?|"))/gm;
+    const cleanerUrl = queryStringRegex.exec(dirtyUrl)[0];
+    // trim beginning and ending characters
+    const cleanUrl = cleanerUrl.substr(1).slice(0, -1);
+    return cleanUrl;
   }
 
-  async function getRecipe(url) {
-    let recipeObj;
-    // get known recipe
-    recipeObj = tryGetIndexedRecipe(url);
-    if (recipeObj === null) {
-      // index doesn't have that site;
-      // get unknown recipe
-      recipeObj = 'test';
-    }
-    return recipeObj;
-  }
-
-
-  async function getRecipe2(url, callback) {
+  async function getUnindexedRecipe(url) {
     // if page is not stored in list
     // get page as string
     // search with regex for link to print page
     // strip out querystrings
     // request that print page
     // get title
-    // print page and set title
-    let fullSiteContents; let printSiteContents; let
-      printUrl;
     try {
       fullSiteContents = await _doRequest(url);
     } catch (err) {
-      logger.error('Http error', err);
-      return res.status(500).send();
+      // return error here or something
     }
-    printUrl = _findPrintUrl(fullSiteContents);
+    const printUrl = _findPrintUrl(fullSiteContents);
+    // validate this url here
     try {
       fullSiteContents = await _doRequest(printUrl);
     } catch (err) {
-      logger.error('Http error', err);
-      return res.status(500).send();
+      // return error here or something
     }
-    return fullSiteContents;
+    _parseHtml(fullSiteContents);
+    const recipeContents = _getRecipeBody('body');
+    const recipeName = _getRecipeName('title');
+    return { url, recipeContents, recipeName };
   }
 
-  function _findPrintUrl(str) {
-    const regex = /(="(https?|www|\/\/www)(.+?)print(.+?)")/gm;
-    const dirtyUrl = regex.exec(str)[0];
-    // remove query strings
-    const queryStringRegex = /(="(.+?)(\?|"))/gm;
-    const cleanerUrl = queryStringRegex.exec(dirtyUrl)[0];
-    // trim beginning and ending characters
-    const cleanUrl = cleanerUrl.substr(2).slice(0, -1);
-    return cleanUrl;
+
+  async function tryGetIndexedRecipe(url) {
+    let siteObject = _getSiteObjectFromIndex(url);
+    if (siteObject == null) {
+      throw new Error('site is not in index');
+    }
+    siteObject = _addPrintUrl(siteObject);
+    fullSiteContents = await _doRequest(siteObject.printUrl).catch((err) => { console.log(err); });
+    _parseHtml(fullSiteContents);
+    const recipeContents = _getRecipeBody(siteObject.recipeNodeIdentifier);
+    const recipeName = _getRecipeName(siteObject.recipeNameIdentifier);
+    return { url, recipeContents, recipeName };
   }
 
+  async function getRecipe(url) {
+    let recipeObj;
+    try {
+      recipeObj = await tryGetIndexedRecipe(url);
+    } catch (error) {
+      recipeObj = await getUnindexedRecipe(url);
+    }
+    return recipeObj;
+  }
   return {
     getRecipe,
-    getRecipe2,
   };
 }());
 

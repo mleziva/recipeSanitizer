@@ -27,17 +27,7 @@ router.get('/recipe', async (req, res) => {
     res.json(err.toString());
   }
 });
-router.get('/recipe2', async (req, res, next) => {
-  try {
-    const searchedUrl = req.query.recipeUrl || 'https://www.allrecipes.com/recipe/245559/fall-infused-mashed-potatoes/?internalSource=staff%20pick&referringId=1540&referringContentType=Recipe%20Hub';
-    const data = await RecipeParser.getRecipe2(searchedUrl);
-    res.json(data);
-  } catch (e) {
-    // this will eventually be handled by your error handling middleware
-    next(e);
-  }
-});
-router.get('/recipe/recentSearches', (req, res, next) => {
+router.get('/recipe/recentSearches', (req, res) => {
   res.json(recipeCache.recentSearches);
 });
 

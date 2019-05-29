@@ -1,0 +1,24 @@
+{
+    "recipeSites": [
+        {
+            "hostName": "www.allrecipes.com",
+            "urlInfo": {
+                "format" : "https://{hostname}/recipe/{id}/{name}/print",
+                "truncateCount" : 6,
+                "printKeyword" : "print"
+            },
+            "recipeNodeIdentifier": ".recipe-print__container",
+            "recipeNameIdentifier": ".recipe-print__title"
+        },
+        {
+            "hostName": "www.othersite.com",
+            "urlInfo": {
+                "format" : "https://{hostname}/recipe/{id}/{name}/print",
+                "truncateCount" : 6,
+                "printKeyword" : "print"
+            },
+            "recipeNodeIdentifier": ".recipe-print__container",
+            "recipeNameIdentifier": ".recipe-print__title"
+        }
+    ]
+}
