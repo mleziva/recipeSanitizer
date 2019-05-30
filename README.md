@@ -1,3 +1,13 @@
+# Overview:
+This solution is two projects:
+1. angular application
+2. Node rest API
+
+Run the angular application with ng serve
+Run the node api with npm run debug (uses nodemone)
+Attach the visual studio code debuger using the "node: attach nodemon" debug setting
+
+
 # RecipeSanitizer
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.9.

@@ -1,17 +1,21 @@
-var express = require('express');
-var logger = require('morgan');
-var bodyParser = require('body-parser');
+const express = require('express');
+const logger = require('morgan');
+const bodyParser = require('body-parser');
 const cors = require('cors');
-var apiRoutes = require('./server/recipeRoutes');
+const apiRoutes = require('./server/recipeRoutes');
+const loggingReqMiddleware = require('./server/middlware/request/loggingMiddleware');
+const loggingResMiddleware = require('./server/middlware/response/loggingMiddleware');
 
-var app = express();
+const app = express();
 
 app.use(cors());
 app.options('*', cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({'extended':'false'}));
+app.use(bodyParser.urlencoded({ extended: 'false' }));
+app.use('/api', loggingReqMiddleware);
 app.use('/api', apiRoutes);
+app.use('/api', loggingResMiddleware);
 
 // // catch 404 and forward to error handler
 // app.use(function(req, res, next) {

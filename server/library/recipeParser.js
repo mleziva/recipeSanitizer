@@ -2,6 +2,7 @@ const request = require('request');
 const HTMLParser = require('node-html-parser');
 const zlib = require('zlib');
 const recipeSites = require('./recipeSiteIndex').recipeSites; // delete require.cache[require.resolve('file.json')]
+const logger = require('../logging/logger');
 
 const recipeParser = (function recipeParser() {
   let hostName; let fullSiteContents; let htmlRoot;
@@ -73,17 +74,22 @@ const recipeParser = (function recipeParser() {
     }
     return siteObject;
   }
+  function _addUrlProtocol(url) {
+    // get rid of everything before the domain and give http protocol
+    return `https://${url.slice(url.indexOf(hostName))}`;
+  }
   function _findPrintUrl(str) {
     // ("([^"]+?)www\.ambitiouskitchen\.com([^"]+?)print(.*?)")
     const hostnameRegex = hostName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-    const regex = new RegExp(`("([^"]+?)${hostnameRegex}([^"]+?)print(.*?)")`, 'gm');
+    const regex = new RegExp(`("([^"]*?)${hostnameRegex}([^"]+?)print(.*?)")`, 'gmi');
     const dirtyUrl = regex.exec(str)[0];
     // remove query strings
     const queryStringRegex = /("(.+?)(\?|"))/gm;
     const cleanerUrl = queryStringRegex.exec(dirtyUrl)[0];
     // trim beginning and ending characters
     const cleanUrl = cleanerUrl.substr(1).slice(0, -1);
-    return cleanUrl;
+    const finalUrl = _addUrlProtocol(cleanUrl);
+    return finalUrl;
   }
 
   async function getUnindexedRecipe(url) {
@@ -134,6 +140,7 @@ const recipeParser = (function recipeParser() {
     }
     return recipeObj;
   }
+
   return {
     getRecipe,
   };
