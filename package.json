@@ -27,6 +27,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.0",
     "morgan": "^1.9.1",
+    "ngx-spinner": "^7.1.4",
     "node-cache": "^4.2.0",
     "node-html-parser": "^1.1.15",
     "nodemon": "^1.19.0",

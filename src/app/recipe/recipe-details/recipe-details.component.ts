@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-recipe-details',
@@ -9,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 export class RecipeDetailsComponent implements OnInit {
     recipeDetails = '';
 
-    constructor(private route: ActivatedRoute, private http: HttpClient) { }
+    constructor(private route: ActivatedRoute, private http: HttpClient, private spinner: NgxSpinnerService) { }
 
     ngOnInit() {
         this.route.queryParams
@@ -24,8 +25,10 @@ export class RecipeDetailsComponent implements OnInit {
             this.recipeDetails = '';
             return;
         }
+        this.spinner.show();
         this.http.get('http://localhost:3000/api/recipe/?recipeUrl=' + url)
             .subscribe(res => {
+                this.spinner.hide();
                 this.recipeDetails = res.toString();
             }, (err) => {
                 console.log(err);
