@@ -1,0 +1,6 @@
+<div class="recentRecipesContainer">
+    <h4>Recently Searched Recipes</h4>
+    <ul>
+      <li *ngFor="let recipe of recentRecipes"><a [attr.href]="recipe.url">{{recipe.name}}</a></li>
+    </ul>
+  </div>

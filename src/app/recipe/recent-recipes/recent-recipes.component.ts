@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
-import { RecentRecipesService } from '../recent-recipes.service';
+import { RecentRecipesService } from '../../recent-recipes.service';
 
 @Component({
   selector: 'app-recent-recipes',
-  templateUrl: './recent-recipes.component.html',
-  styleUrls: ['./recent-recipes.component.css']
+  templateUrl: './recent-recipes.component.html'
 })
 export class RecentRecipesComponent implements OnInit {
   recentRecipes = [];

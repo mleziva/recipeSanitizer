@@ -1,29 +1,32 @@
 <div class="container">
+  <div class="jumbotron">
+    <h1>Welcome to <i>JustGiveMeTheRecipe.com</i></h1>
+    <p>This app removes all the junk from recipe sites and gives you back just what you need: the actual recipe.
+    </p>
+    <p>
+      To get started, just copy the url of the recipe you want to view into the finder box and hit 'Get Recipe'
+    </p>
+  </div>
   <div class="row">
-    <div class="col-md-12">
-      <h2>Welcome to recipe sanitizer</h2>
-      <P>
-This app removes all the junk from recipe sites and gives you back just what you need: the actual recipe. 
-      </P>
-      <p>
-        To get started, just copy the url of the recipe you want to view into the search box and hit 'Get Recipe'
-      </p>
-      <div class="input-group mb-3">
-          <input [(ngModel)]="url" type="text" class="form-control" placeholder="URL of recipe" aria-label="Recipe URL"
-            aria-describedby="basic-addon2">
-          <div class="input-group-append">
-            <button (click)="onClickMe()" class="btn btn-outline-secondary" type="button">Get Recipe</button>
+    <div class="col-md-9">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="input-group mb-3">
+            <input [(ngModel)]="url" type="text" class="form-control" placeholder="URL of recipe"
+              aria-label="Recipe URL" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <button (click)="onClickMe()" class="btn btn-outline-secondary" type="button">Get Recipe</button>
+            </div>
           </div>
         </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p align="left" [innerHTML]="clickMessage"></p>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-10">
-      <!-- <P>{{clickMessage}}</P> -->
-      <p align="left" [innerHTML]="clickMessage"></p>
-    </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
       <app-recent-recipes></app-recent-recipes>
     </div>
   </div>
