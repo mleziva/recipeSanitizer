@@ -2,7 +2,8 @@ const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const apiRoutes = require('./server/recipeRoutes');
+const recipeController = require('./server/controller/recipeController');
+const adminController = require('./server/controller/adminController');
 const loggingReqMiddleware = require('./server/middlware/request/loggingMiddleware');
 const loggingResMiddleware = require('./server/middlware/response/loggingMiddleware');
 
@@ -14,7 +15,8 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: 'false' }));
 app.use('/api', loggingReqMiddleware);
-app.use('/api', apiRoutes);
+app.use('/api', recipeController);
+app.use('/admin', adminController);
 app.use('/api', loggingResMiddleware);
 
 // // catch 404 and forward to error handler

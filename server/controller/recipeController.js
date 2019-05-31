@@ -1,7 +1,7 @@
 const express = require('express');
-const RecipeParser = require('./library/recipeParser');
-const recipeCache = require('./library/recentCache');
-const logger = require('./logging/logger');
+const RecipeParser = require('../library/recipeParser');
+const recipeCache = require('../library/recentCache');
+const logger = require('../logging/logger');
 
 const router = express.Router();
 /* GET home page. */
