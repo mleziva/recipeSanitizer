@@ -1,5 +1,4 @@
 const express = require('express');
-const socketSingleton = require('./library/socketSingleton');
 const RecipeParser = require('./library/recipeParser');
 const recipeCache = require('./library/recentCache');
 const logger = require('./logging/logger');
@@ -21,7 +20,6 @@ router.get('/recipe', async (req, res, next) => {
     // try to get name from url
     // save search to cache
     recipeCache.addSearch(searchHistorObj);
-    socketSingleton.io.emit('newSearch', searchHistorObj);
     res.json(recipeContent);
   } catch (err) {
     console.log(err);

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-recipe',
@@ -7,20 +8,16 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./recipe.component.css']
 })
 export class RecipeComponent implements OnInit {
-  url = '';
-  clickMessage = '';
-  constructor(private http: HttpClient) { }
+  getRecipeUrl = '';
+  constructor( private route: ActivatedRoute,private router: Router) { }
 
   ngOnInit() {
+    this.route.queryParams
+    .subscribe(params => {
+        this.getRecipeUrl = params.recipeUrl;
+    });
   }
-  onClickMe() {
-
-    this.http.get('http://localhost:3000/api/recipe/?recipeUrl=' + encodeURI(this.url))
-      .subscribe(res => {
-        this.clickMessage = res.toString();
-      }, (err) => {
-        console.log(err);
-      }
-      );
+  getRecipe() {
+    this.router.navigate(['/recipe'], { queryParams: { recipeUrl: encodeURI(this.getRecipeUrl) } });
   }
 }

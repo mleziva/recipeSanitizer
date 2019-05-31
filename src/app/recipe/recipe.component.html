@@ -12,17 +12,17 @@
       <div class="row">
         <div class="col-md-12">
           <div class="input-group mb-3">
-            <input [(ngModel)]="url" type="text" class="form-control" placeholder="URL of recipe"
+            <input [(ngModel)]="getRecipeUrl" type="text" class="form-control" placeholder="URL of recipe"
               aria-label="Recipe URL" aria-describedby="basic-addon2">
             <div class="input-group-append">
-              <button (click)="onClickMe()" class="btn btn-outline-secondary" type="button">Get Recipe</button>
+              <button (click)="getRecipe()" class="btn btn-outline-secondary" type="button">Get Recipe</button>
             </div>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
-          <p align="left" [innerHTML]="clickMessage"></p>
+          <app-recipe-details></app-recipe-details>
         </div>
       </div>
     </div>
