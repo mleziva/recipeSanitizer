@@ -68,6 +68,7 @@ router.post('/config', async (req, res) => {
   const body = req.body;
   try {
     await _writeFile('./server/library/recipeSiteIndex.json', JSON.stringify(body));
+    // delete require.cache[require.resolve('recipeSiteIndex')];
     res.status(204).send();
   } catch (err) {
     res.send(err);

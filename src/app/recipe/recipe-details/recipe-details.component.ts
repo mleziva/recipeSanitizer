@@ -9,7 +9,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class RecipeDetailsComponent implements OnInit {
     recipeDetails = '';
-
+    showIframe = false;
+    iframeSrc = '';
     constructor(private route: ActivatedRoute, private http: HttpClient, private spinner: NgxSpinnerService) { }
 
     ngOnInit() {
@@ -29,10 +30,14 @@ export class RecipeDetailsComponent implements OnInit {
         this.http.get('http://localhost:3000/api/recipe/?recipeUrl=' + url)
             .subscribe(res => {
                 this.spinner.hide();
-                this.recipeDetails = res.toString();
+                this.showIframe =  res.useIframe;
+                this.iframeSrc = res.printUrl;
+                this.recipeDetails = res.recipeContents.toString();
             }, (err) => {
                 console.log(err);
             }
             );
     };
 }
+
+

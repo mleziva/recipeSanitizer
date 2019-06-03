@@ -20,7 +20,7 @@ router.get('/recipe', async (req, res, next) => {
     // try to get name from url
     // save search to cache
     recipeCache.addSearch(searchHistorObj);
-    res.json(recipeContent);
+    res.json(recipeObject);
   } catch (err) {
     console.log(err);
     res.json(err.toString());

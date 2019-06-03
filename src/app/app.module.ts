@@ -9,13 +9,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { RecentRecipesComponent } from './recipe/recent-recipes/recent-recipes.component';
 import { RecipeDetailsComponent } from './recipe/recipe-details/recipe-details.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { SafePipe } from './shared/safe-pipe';
 @NgModule({
   declarations: [
     AppComponent,
     RecipeComponent,
     RecentRecipesComponent,
     PageNotFoundComponent,
-    RecipeDetailsComponent
+    RecipeDetailsComponent,
+    SafePipe 
   ],
   imports: [
     BrowserModule,

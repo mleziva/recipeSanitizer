@@ -1,1 +1,2 @@
-<p align="left" [innerHTML]="recipeDetails">recipe details</p>
+<p *ngIf="!showIframe" align="left" [innerHTML]="recipeDetails"></p>
+<iframe *ngIf="showIframe" [src]="iframeSrc | safe" width="100%" frameborder="0"></iframe>
