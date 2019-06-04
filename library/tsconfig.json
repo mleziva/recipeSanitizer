@@ -1,11 +1,12 @@
 {
     "files": [
-        "src/main.ts"
+        "src/*.ts"
     ],
     "compilerOptions": {
         "noImplicitAny": true,
         "target": "es2015",
         "types": ["mocha"],
-        "module": "commonjs"
+        "module": "commonjs",
+        "sourceMap": true
     }
 }

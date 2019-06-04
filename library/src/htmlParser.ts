@@ -1,0 +1,6 @@
+class HtmlParser {
+    html = "";
+    getNodesByContents () {
+        
+    }
+}
