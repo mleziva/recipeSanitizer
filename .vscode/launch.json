@@ -33,5 +33,18 @@
             "restart": true,
             "protocol": "inspector",
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Mocha Tests",
+            "runtimeArgs": [
+                "${workspaceFolder}/node_modules/ts-mocha/bin/ts-mocha",
+                "--timeout", "999999",
+                "-p",
+                "${workspaceFolder}/library/tsconfig.json",
+                "${workspaceFolder}/library/test/**/*.ts"
+            ],
+            "internalConsoleOptions": "openOnSessionStart"
+        }
     ]
 }
