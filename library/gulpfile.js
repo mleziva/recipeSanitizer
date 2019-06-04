@@ -1,9 +1,17 @@
-var gulp = require("gulp");
-var ts = require("gulp-typescript");
-var tsProject = ts.createProject("tsconfig.json");
+const gulp = require('gulp');
+const ts = require('gulp-typescript');
+const mocha = require('gulp-mocha');
 
-gulp.task("default", function () {
-    return tsProject.src()
-        .pipe(tsProject())
-        .js.pipe(gulp.dest("dist"));
-});
+const tsProject = ts.createProject('tsconfig.json');
+
+gulp.task('build', () => tsProject.src()
+  .pipe(tsProject())
+  .js.pipe(gulp.dest('dist')));
+
+gulp.task('test', () => gulp.src('test/*.spec.ts')
+  .pipe(mocha({
+    reporter: 'nyan',
+    require: ['ts-node/register'],
+  })));
+/* single command to hook into VS Code */
+gulp.task('default', gulp.series('build', 'test'));
